@@ -1,0 +1,92 @@
+---
+title: 'Equipo 5: Students Performance'
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: console
+---
+
+<br>
+Somos el equipo 5 de FID, compuesto por Arturo Pérez Sánchez, Jacinto José Ruiz Díaz  y Yassin Lalj El Assri.
+
+Nos hemos puesto como objetivo común obtener la máxima nota posible en la asignatura, teniendo esto en cuenta, hemos decidido que la temática del proyecto será el estudio del rendimiento académico de los estudiantes de secundaria.
+
+Para el desarrollo del proyecto hemos seleccionado un dataset de la plataforma kaggle donde analizaremos el rendimiento académico de los estudiantes de secundaria en 3 areas diferentes (math, reading y writing), el dataset en cuestión consta de 1000 entradas de diferentes alumnos con las siguientes variables:
+
+<ul>
+<li><b>gender (genero):</b> male / female</li>
+<li><b>race/ethnicity (raza/etnia):</b> group A / group B / group C...</li>
+<li><b>parental level of education (nivel de educación de los padres):</b> some college / associate's degree...</li>
+<li><b>lunch (descuento del comedor):</b> standard, free / reduced</li>
+<li><b>test preparation course	prepareación del test):</b> none / completed</li>
+</ul>
+
+Lo primero que haremos será importar las librerias que utilizaremos y el propio dataset que almacenaremos en la variable data.
+
+
+```{r warning=FALSE, message=FALSE}
+library(ggplot2)
+library(dplyr)
+
+ds<-read.csv("../StudentsPerformance.csv" , head = TRUE, sep=",")
+ds
+```
+
+A continuación procederemos a analizar como de repartidos están los datos, para ello haremos una representación gráfica (Gráfico de columnas) para cada una de las dimensiones de estudio:
+<br><br>
+<h3 style="text-align:center"> GÉNERO </h3> 
+```{r fig.align='center'}
+gender_plot <- ggplot(data = ds, 
+                      aes(x = gender, fill = gender)) + 
+               geom_bar(stat = "count") +
+               xlab("Genero") + 
+               ylab("Total")
+gender_plot
+```
+
+<h3 style="text-align:center"> ESTUDIOS DE LOS PADRES </h3> 
+```{r fig.align='center'}
+parents_degree <- ggplot(data = ds,
+                         aes(x = parental.level.of.education, fill =
+                               parental.level.of.education)) + 
+                  geom_bar(stat = "count") + 
+                  xlab("Tipo de Estudios") + 
+                  ylab("Total")
+
+parents_degree
+```
+
+<h3 style="text-align:center"> COMEDOR </h3> 
+
+```{r fig.align='center'}
+lunch_plot <- ggplot(data = ds,
+                aes(x = lunch, fill = lunch)) +
+          geom_bar(stat = "count") + 
+          xlab("Descuento Comedor") + 
+          ylab("Total")
+lunch_plot
+```
+
+<h3 style="text-align:center"> EXAMEN PREPARATORIO </h3>
+
+```{r fig.align='center'}
+prepration_plot <- ggplot(data = ds,
+                     aes(x = test.preparation.course, fill = test.preparation.course)) +
+              geom_bar(stat = "count") + 
+              xlab("Realización del examen") + 
+              ylab("Total")
+
+prepration_plot
+```
+
+<br><br>Con estos gráficos podemos análizar como estan repartidos los datos en las variables y comprobar cuantos campos vacios (n/a) tenemos en el dataset.
+
+Por último haremos una última representación gráfica donde se relacionan las notas en el reading y writing
+
+```{r fig.align='center'}
+scores_plot <- ggplot(ds, aes( reading.score, writing.score)) +
+  geom_point()
+scores_plot
+```
+
