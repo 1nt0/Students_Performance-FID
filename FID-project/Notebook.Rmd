@@ -8,22 +8,21 @@ editor_options:
 ---
 
 <br>
-Somos el equipo 5 de FID, compuesto por Arturo Pérez Sánchez, Jacinto José Ruiz Díaz  y Yassin Lalj El Assri.
+Somos el equipo 5 de FID, compuesto por **Arturo Pérez Sánchez**, **Jacinto José Ruiz Díaz**  y **Yassin Lalj El Assri**, y nos hemos puesto como objetivo obtener la máxima nota posible en la asignatura. 
 
-Nos hemos puesto como objetivo común obtener la máxima nota posible en la asignatura, teniendo esto en cuenta, hemos decidido que la temática del proyecto será el estudio del rendimiento académico de los estudiantes de secundaria.
+Teniendo esto en cuenta, hemos decidido que la temática del proyecto será el estudio del rendimiento académico de los estudiantes de secundaria.
 
-Para el desarrollo del proyecto hemos seleccionado un dataset de la plataforma kaggle donde analizaremos el rendimiento académico de los estudiantes de secundaria en 3 areas diferentes (math, reading y writing), el dataset en cuestión consta de 1000 entradas de diferentes alumnos con las siguientes variables:
+Para el desarrollo del proyecto hemos seleccionado un dataset de la plataforma Kaggle donde analizaremos el rendimiento académico de los estudiantes de secundaria en 3 áreas diferentes (*math*, *reading* y *writing*). El dataset en cuestión consta de 1000 entradas de diferentes alumnos con las siguientes variables:
 
-<ul>
-<li><b>gender (genero):</b> male / female</li>
-<li><b>race/ethnicity (raza/etnia):</b> group A / group B / group C...</li>
-<li><b>parental level of education (nivel de educación de los padres):</b> some college / associate's degree...</li>
-<li><b>lunch (descuento del comedor):</b> standard, free / reduced</li>
-<li><b>test preparation course	prepareación del test):</b> none / completed</li>
-</ul>
 
-Lo primero que haremos será importar las librerias que utilizaremos y el propio dataset que almacenaremos en la variable data.
+* **gender (genero)**: male / female
+* **race/ethnicity (raza/etnia)**: group A / group B / group C...
+* **parental level of education (nivel de educación de los padres)**: some college / associate's degree...
+* **lunch (descuento del comedor)**: standard, free / reduced
+* **test preparation course	prepareación del test)**: none / completed
 
+
+Lo primero que haremos será importar las librerías que utilizaremos y el propio dataset, que almacenaremos en la variable *data*.
 
 ```{r warning=FALSE, message=FALSE}
 library(ggplot2)
@@ -33,9 +32,11 @@ ds<-read.csv("../StudentsPerformance.csv" , head = TRUE, sep=",")
 ds
 ```
 
-A continuación procederemos a analizar como de repartidos están los datos, para ello haremos una representación gráfica (Gráfico de columnas) para cada una de las dimensiones de estudio:
-<br><br>
-<h3 style="text-align:center"> GÉNERO </h3> 
+<br/>
+A continuación, procederemos a analizar cómo de repartidos están los datos. Para ello haremos una representación gráfica (Gráfico de columnas) para cada una de las dimensiones de estudio:
+<br/><br/>
+
+#### **GÉNERO**
 ```{r fig.align='center'}
 gender_plot <- ggplot(data = ds, 
                       aes(x = gender, fill = gender)) + 
@@ -44,8 +45,9 @@ gender_plot <- ggplot(data = ds,
                ylab("Total")
 gender_plot
 ```
+<br/>
 
-<h3 style="text-align:center"> ESTUDIOS DE LOS PADRES </h3> 
+#### **ESTUDIOS DE LOS PADRES**
 ```{r fig.align='center'}
 parents_degree <- ggplot(data = ds,
                          aes(x = parental.level.of.education, fill =
@@ -56,8 +58,9 @@ parents_degree <- ggplot(data = ds,
 
 parents_degree
 ```
+<br/>
 
-<h3 style="text-align:center"> COMEDOR </h3> 
+#### **COMEDOR**
 
 ```{r fig.align='center'}
 lunch_plot <- ggplot(data = ds,
@@ -67,8 +70,9 @@ lunch_plot <- ggplot(data = ds,
           ylab("Total")
 lunch_plot
 ```
+<br/>
 
-<h3 style="text-align:center"> EXAMEN PREPARATORIO </h3>
+#### **EXAMEN PREPARATORIO**
 
 ```{r fig.align='center'}
 prepration_plot <- ggplot(data = ds,
@@ -79,14 +83,15 @@ prepration_plot <- ggplot(data = ds,
 
 prepration_plot
 ```
+<br/>
 
-<br><br>Con estos gráficos podemos análizar como estan repartidos los datos en las variables y comprobar cuantos campos vacios (n/a) tenemos en el dataset.
+Con estos gráficos podemos analizar cómo están repartidos los datos en las variables y comprobar cuántos campos vacíos (n/a) tenemos en el dataset.
 
-Por último haremos una última representación gráfica donde se relacionan las notas en el reading y writing
+Por último, haremos una última representación gráfica donde se relacionan las notas en el *reading* y *writing*:
 
 ```{r fig.align='center'}
 scores_plot <- ggplot(ds, aes( reading.score, writing.score)) +
   geom_point()
 scores_plot
 ```
-
+<br/>
