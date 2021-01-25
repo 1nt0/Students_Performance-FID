@@ -1,0 +1,110 @@
+```{r}
+library(ggplot2)
+library(dplyr)
+library(lattice)
+library(caret)
+library(mlbench)
+```
+
+```{r}
+datasetAlumn<-read.csv("../StudentsPerformanceRegression.csv" , head = TRUE, sep=",")
+datasetAlumn
+```
+
+-----------------------REGRESIÓN LINEAL-----------------------
+
+```{r}
+#ENTRENAMIENTO DE LA REGRESION LINEAL PARA COMPARAR TODOS LOS CAMPOS CON EL DE READING SCORE
+control <- trainControl(method="repeatedcv", number=10, repeats=5)
+lmRS <- train(reading.score ~ . ,data = datasetAlumn, trControl = control, metric="RMSE",tuneLength = 10, method = "lm")
+```
+
+```{r}
+summary(lmRS)
+```
+
+```{r}
+postResample(pred = predict(lmRS), obs = datasetAlumn$reading.score)
+```
+```{r}
+ggplot(varImp(lmRS))
+```
+
+
+```{r}
+predictionsRS <- predict(lmRS, datasetAlumn)
+predictionsRS
+```
+
+```{r}
+plot(predictionsRS,datasetAlumn$reading.score, xlab="predicted reading score",ylab="actual reading score", abline(a=0,b=1), pch = 20)
+```
+
+
+```{r}
+#ENTRENAMIENTO DE LA REGRESION LINEAL PARA COMPARAR TODOS LOS CAMPOS CON EL DE MATH SCORE
+lmMS <- train(math.score ~ . ,data = datasetAlumn, trControl = control, metric="RMSE",tuneLength = 10, method = "lm")
+```
+
+```{r}
+summary(lmMS)
+```
+
+```{r}
+postResample(pred = predict(lmMS), obs = datasetAlumn$math.score)
+```
+
+```{r}
+ggplot(varImp(lmMS))
+```
+
+
+```{r}
+predictionsMS <- predict(lmMS, datasetAlumn)
+predictionsMS
+```
+
+```{r}
+plot(predictionsMS,datasetAlumn$math.score, xlab="predicted math score",ylab="actual math score", abline(a=0,b=1), pch = 20)
+```
+
+```{r}
+#ENTRENAMIENTO DE LA REGRESION LINEAL PARA COMPARAR TODOS LOS CAMPOS CON EL DE WRITING SCORE
+lmWS <- train(writing.score ~ . ,data = datasetAlumn, trControl = control, metric="RMSE",tuneLength = 10, method = "lm")
+```
+
+```{r}
+summary(lmWS)
+```
+
+```{r}
+postResample(pred = predict(lmWS), obs = datasetAlumn$writing.score)
+```
+
+```{r}
+ggplot(varImp(lmWS))
+```
+
+```{r}
+predictionsWS <- predict(lmWS, datasetAlumn)
+predictionsWS
+```
+```{r}
+plot(predictionsWS,datasetAlumn$writing.score, xlab="predicted writing score",ylab="actual writing score", abline(a=0,b=1), pch = 20)
+```
+
+-----------------------REGRESION MULTIVARIABLE-----------------------
+
+```{r}
+#ENTRENAMIENTO DE LA REGRESION MULTIPLE PARA COMPARAR LOS CAMPOS DE READING Y WRING SCORE CON EL DE MATH SCORE
+lmRSM <- train(reading.score+writing.score ~ . ,data = datasetAlumn, trControl = control, metric="RMSE",tuneLength = 10, method = "lm")
+```
+
+```{r}
+summary(lmRSM)
+```
+
+```{r}
+predictionsRSM <- predict(lmRSM, datasetAlumn)
+predictionsRSM
+```

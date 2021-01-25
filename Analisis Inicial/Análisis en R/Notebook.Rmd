@@ -3,6 +3,7 @@ title: 'Equipo 5: Students Performance'
 output:
   html_document:
     df_print: paged
+  pdf_document: default
 editor_options:
   chunk_output_type: console
 ---
@@ -28,7 +29,7 @@ Lo primero que haremos será importar las librerías que utilizaremos y el propi
 library(ggplot2)
 library(dplyr)
 
-ds<-read.csv("../StudentsPerformance.csv" , head = TRUE, sep=",")
+ds<-read.csv("../../StudentsPerformance.csv" , head = TRUE, sep=",")
 ds
 ```
 
@@ -95,3 +96,4 @@ scores_plot <- ggplot(ds, aes( reading.score, writing.score)) +
 scores_plot
 ```
 <br/>
+

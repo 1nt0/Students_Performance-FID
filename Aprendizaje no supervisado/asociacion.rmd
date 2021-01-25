@@ -1,0 +1,84 @@
+---
+title: "Association Rule Mining"
+output:
+  html_document:
+    df_print: paged
+---
+
+## Lectura del dataset
+
+```{r}
+df<-read.csv("../StudentsMat.csv", head = TRUE, sep=",")
+df
+```
+#### Instalación del paquete necesario "arules" para efectuar Reglas de asociación y hacer uso del algoritmo Apriori
+```{r}
+#install.packages("arules")
+```
+
+#### Importación del paquete.
+```{r}
+library(arules)
+```
+
+#### Eliminamos columnas numéricas e irrelevantes
+```{r}
+df_reducido = subset(df, select= -c(school, age, address, Medu, Fedu, traveltime, studytime, failures, famrel, freetime, goout, health, absences, G1, G2, G3, reason, guardian, schoolsup, famsup, paid, activities, nursery, internet, romantic, Dalc))
+df_reducido
+```
+
+
+#### Convertimos las variables de tipo "chr" a Factores
+```{r}
+cols <- c("Walc", "sex", "famsize", "Pstatus", "Mjob", "Fjob", "higher")
+
+df_reducido[cols] <- lapply(df_reducido[cols], factor)
+df_reducido
+```
+
+
+#### Comprobamos la nueva estructura tras los cambios:
+```{r}
+str(df_reducido)
+```
+
+### Aplicamos el algoritmo Apriori sobre el dataset procesado. Indicamos que solo nos muestre como rhs el consumo de alcohol en los fines de semana:
+```{r}
+rules <- apriori(df_reducido,
+  parameter = list(minlen=2, supp=0.005, conf=0.8),
+  appearance = list(rhs=c("Walc=1","Walc=2","Walc=3","Walc=4","Walc=5"),
+  default="lhs"),
+  control = list(verbose=F))
+
+rules.sorted <- sort(rules, by="lift")
+
+inspect(rules.sorted)
+```
+#### Seleccionamos las reglas cuyos lhs son redundantes:
+```{r}
+subset.matrix <- is.subset(rules.sorted, rules.sorted, sparse = FALSE)
+subset.matrix[lower.tri(subset.matrix, diag=T)] <- NA
+
+redundant <- colSums(subset.matrix, na.rm=T) >= 1
+which(redundant)
+
+```
+#### Eliminamos las redundantes:
+```{r}
+rules.pruned <- rules.sorted[!redundant]
+inspect(rules.pruned)
+```
+#### Instalamos arulesViz para visualización
+```{r}
+#install.packages("arulesViz")
+```
+
+```{r}
+library(arulesViz)
+plot(rules.pruned, method="paracoord", control=list(reorder=TRUE))
+```
+
+```{r}
+plot(rules.pruned)
+```
+

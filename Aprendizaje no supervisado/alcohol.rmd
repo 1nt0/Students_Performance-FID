@@ -1,0 +1,95 @@
+---
+title: "PCA"
+output: html_notebook
+---
+
+## Lectura del dataset
+```{r}
+library(ggplot2)
+library(dplyr)
+
+dt<-read.csv("../StudentsMat.csv" , head = TRUE, sep=",")
+dt
+```
+
+##### Eliminación de variables categóricas
+```{r}
+dt_reducido = subset(dt, select= -c(school, sex, address, famsize, Pstatus, Mjob, Fjob, reason, guardian, schoolsup, famsup, paid, activities, nursery, higher, internet, romantic))
+dt_reducido
+```
+
+```{r}
+summary(dt_reducido)
+```
+
+
+```{r}
+unique(dt_reducido[duplicated(dt_reducido),])
+```
+
+
+```{r}
+library("FactoMineR")
+library("factoextra")
+```
+
+```{r}
+str(dt_reducido)
+```
+
+```{r}
+dt_reducido.pca <- prcomp(dt_reducido, center = TRUE, scale = TRUE)
+```
+
+```{r}
+summary(dt_reducido.pca)
+```
+```{r}
+str(dt_reducido.pca)
+```
+
+```{r}
+install.packages("devtools")
+```
+
+```{r}
+library(devtools)
+install_github("vqv/ggbiplot")
+```
+
+```{r}
+library(ggbiplot)
+library(plyr)
+library(dplyr)
+
+ggbiplot(dt_reducido.pca, obs.scale = 1, var.scale = 1, labels=rownames(dt_reducido), groups=dt_reducido$Walc, ellipse=TRUE)
+```
+
+```{r}
+# Contributions of variables to PC1
+fviz_contrib(dt_reducido.pca, choice = "var", axes = 1, top = 10)
+# Contributions of variables to PC2
+fviz_contrib(dt_reducido.pca, choice = "var", axes = 2, top = 10)
+```
+
+```{r}
+fviz_eig(dt_reducido.pca)
+```
+
+```{r}
+fviz_pca_ind(dt_reducido.pca,
+             col.ind = "cos2", # Color by the quality of representation
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE     # Avoid text overlapping
+             )
+```
+
+
+```{r}
+fviz_pca_var(dt_reducido.pca,
+             col.var = "contrib", # Color by contributions to the PC
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE     # Avoid text overlapping
+             )
+```
+

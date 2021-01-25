@@ -1,0 +1,43 @@
+```{r}
+datasetAlumn<-read.csv("../StudentsPerformanceRegression.csv" , head = TRUE, sep=",")
+datasetAlumn
+```
+
+```{r}
+alumn.scale <- as.data.frame(scale(datasetAlumn[1:3]))
+```
+
+
+#Creamos los clústers
+
+```{r}
+set.seed(80)
+
+datasetAlumn.km <- kmeans(alumn.scale, centers = 4)
+names(datasetAlumn.km)
+
+datasetAlumn.km$cluster
+datasetAlumn.km$totss
+datasetAlumn.km$betweenss
+datasetAlumn.km$withinss
+datasetAlumn.km$tot.withinss
+```
+
+#Determinar el número de clústers óptimo
+
+```{r}
+submt <- kmeans(alumn.scale, centers = 1)$betweenss
+
+for(i in 2:10) submt[i] <- kmeans(alumn.scale, centers = i)$betweenss
+
+plot(1:10, submt, type="b", xlab = "number of clusters", ylab="sum of squares of inter groups")
+```
+#Inspección de los resultados
+
+```{r}
+plot(datasetAlumn$math.score, datasetAlumn$writing.score, col=datasetAlumn.km$cluster, xlab="Math score", ylab="Writing score")
+
+plot(datasetAlumn$math.score, datasetAlumn$reading.score, col=datasetAlumn.km$cluster, xlab="Math score", ylab="Reading score")
+
+aggregate(datasetAlumn, by=list(datasetAlumn.km$cluster), mean)
+```
