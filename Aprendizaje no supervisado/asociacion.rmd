@@ -8,7 +8,7 @@ output:
 ## Lectura del dataset
 
 ```{r}
-df<-read.csv("../StudentsMat.csv", head = TRUE, sep=",")
+df<-read.csv("StudentsMat.csv", head = TRUE, sep=",")
 df
 ```
 #### Instalación del paquete necesario "arules" para efectuar Reglas de asociación y hacer uso del algoritmo Apriori
@@ -21,14 +21,14 @@ df
 library(arules)
 ```
 
-#### Eliminamos columnas numéricas e irrelevantes
+#### Como preprocesamiento, eliminamos columnas numéricas e irrelevantes
 ```{r}
 df_reducido = subset(df, select= -c(school, age, address, Medu, Fedu, traveltime, studytime, failures, famrel, freetime, goout, health, absences, G1, G2, G3, reason, guardian, schoolsup, famsup, paid, activities, nursery, internet, romantic, Dalc))
 df_reducido
 ```
 
 
-#### Convertimos las variables de tipo "chr" a Factores
+#### Siguiendo con el preprocesamiento inicial, convertimos las variables de tipo "chr" a Factores
 ```{r}
 cols <- c("Walc", "sex", "famsize", "Pstatus", "Mjob", "Fjob", "higher")
 
@@ -54,6 +54,9 @@ rules.sorted <- sort(rules, by="lift")
 
 inspect(rules.sorted)
 ```
+
+Nos genera 140 reglas. Comprobamos si hay reglas con antecedentes redundantes para eliminarlas:
+
 #### Seleccionamos las reglas cuyos lhs son redundantes:
 ```{r}
 subset.matrix <- is.subset(rules.sorted, rules.sorted, sparse = FALSE)
@@ -61,13 +64,15 @@ subset.matrix[lower.tri(subset.matrix, diag=T)] <- NA
 
 redundant <- colSums(subset.matrix, na.rm=T) >= 1
 which(redundant)
-
 ```
-#### Eliminamos las redundantes:
+#### Eliminamos las redundantes y vemos las reglas finales:
 ```{r}
 rules.pruned <- rules.sorted[!redundant]
 inspect(rules.pruned)
 ```
+
+Hemos pasado de 140 reglas a 29, eliminando las redundantes. La lectura de las reglas es la siguiente: si se da los valores de los atributos lhs (en el ejemplo 1: famsize=LE3, Mjob=other, higher=no), entonces ocurre rhs (Walc será 5 -el consumo de alcohol en los fines de semana será máximo-).
+
 #### Instalamos arulesViz para visualización
 ```{r}
 #install.packages("arulesViz")
